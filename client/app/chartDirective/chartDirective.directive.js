@@ -31,21 +31,22 @@ angular.module('chartsApp.directive', ['d3'])
 			var linearGradient = svg.append('defs').append('linearGradient');
 			linearGradient
 				.attr('id', name)
-				.attr('x1', '0%')
-				.attr('y1', '100%')
-				.attr('x2', '100%')
-				.attr('y2', '0%')
-				.append('stop')
-					.attr('offset', '0%')
-					.attr('style', 'stop-color:' + color1 + ';stop-opacity:1');
-			linearGradient
-				.append('stop')
-					.attr('offset', '100%')
-					.attr('style', 'stop-color:' + color2 + ';stop-opacity:1')
+				.attr('x1', '0')
+				.attr('y1', '0')
+				.attr('x2', '0')
+				.attr('y2', '100%')
+				.selectAll("stop")
+				      .data([
+				        {offset: "0%", color: color1},
+				        {offset: "100%", color: color2}
+				      ])
+				    .enter().append("stop")
+				      .attr("offset", function(d) { return d.offset; })
+				      .attr("stop-color", function(d) { return d.color; });
 		};
 		
 		/**
-		 * Create a glow filter efftect that an be applied to a svg element.
+		 * Create a glow filter efftect that can be applied to a svg element.
 		 * 
 		 * @param  {Object} svg The root SVG element object ("the svg canvas") to append filter to.
 		 */
@@ -110,7 +111,7 @@ angular.module('chartsApp.directive', ['d3'])
 						console.log('height', height)
 						
 						clearChart(svg);
-						createGradient(svg, 'lgrad', 'rgb(191,185,220)', 'rgb(0,128,128)');
+						createGradient(svg, 'lgrad', 'rgba(255,255,255,1)', 'rgba(255,255,255,0.1)');
 						createGlowFilter(svg);
 	 
 						//Write "NO DATA on center of chart if no data is present..."
