@@ -22,7 +22,21 @@ angular.module('chartsApp.directive', ['d3'])
 			svg.selectAll('*').remove();
 		};
 		
-		
+		/**
+		 * Extract the alpha from the given color string
+		 * @param  {String} color String The color as string
+		 * @return {Number}        The found alpha number or 1 if not found (=no alpha)
+		 */
+		var getAlpha = function(colorString)  {
+			//Handle "rgba(r,g,b,a)" color strings...
+			var re = /^rgba\((?: *\d{1,3} *, *){3}([\d.]*) *\)$/;
+			var m;
+			
+			if ((m = re.exec(colorString)) !== null) {
+			    return m[1];
+			}
+			return 1;
+		};
 		
 		/**
 		 * Create a svg gradient. that can be used as fill...
@@ -42,7 +56,11 @@ angular.module('chartsApp.directive', ['d3'])
 				      ])
 				    .enter().append("stop")
 				      .attr("offset", function(d) { return d.offset; })
-				      .attr("stop-color", function(d) { return d.color; });
+				      .attr("stop-color", function(d) { return d.color; })
+				      //NOTE: Mobile-Safari does not handle alpha in "rgba" colors. 
+				      //But it do support "stop-opacity" attribute!
+				      //http://stackoverflow.com/questions/11303740/svg-linear-gradient-doesnt-work-in-safari
+				      .attr("stop-opacity", function(d) { return getAlpha(d.color); });
 		};
 		
 		/**
