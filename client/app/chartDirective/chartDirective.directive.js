@@ -24,15 +24,15 @@ angular.module('chartsApp.directive', ['d3'])
 		
 		/**
 		 * Extract the alpha from the given color string
-		 * @param  {String} color String The color as string
+		 * @param  {String} color The color as string
 		 * @return {Number}        The found alpha number or 1 if not found (=no alpha)
 		 */
-		var getAlpha = function(colorString)  {
+		var getAlpha = function(color)  {
 			//Handle "rgba(r,g,b,a)" color strings...
 			var re = /^rgba\((?: *\d{1,3} *, *){3}([\d.]*) *\)$/;
 			var m;
 			
-			if ((m = re.exec(colorString)) !== null) {
+			if ((m = re.exec(color)) !== null) {
 			    return m[1];
 			}
 			return 1;
